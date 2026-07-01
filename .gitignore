@@ -1,0 +1,10 @@
+bin/
+obj/
+.vs/
+.agents/
+
+pokemon-tcg-data-master/
+cards/
+sets/
+decks/
+*.json
