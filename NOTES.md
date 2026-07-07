@@ -117,7 +117,9 @@ base1-1
 base1-2
 ```
 
-This worked, but I later learned that many companies prefer using a separate internal database id called RecId.
+Primary key means the column uniquely identifies each row and can not have a null or duplciate value.
+
+This worked, but I later learned that many companies prefer using a separate internal database id called RecId.(Will tackle this tomorrow)
 
 ### NULL Values
 
@@ -166,41 +168,8 @@ Important SQL concepts:
 - GROUP BY groups similar values
 - ORDER BY sorts results
 
-## GitHub Work
 
-I created a GitHub repository for the project:
-
-https://github.com/EliotYah/PokemonTcgSqlImporter
-
-Files added to the repository include:
-- Program.cs
-- PokemonTcgSqlImporter.csproj
-- README.md
-- schema.sql
-- queries.sql
-- .gitignore
-
-The dataset itself is not uploaded. Instead, the README links to the dataset source.
-
-## .gitignore
-
-I added a .gitignore file to avoid uploading files that do not belong in the repository.
-
-Ignored items include:
-- bin/
-- obj/
-- .vs/
-- .agents/
-- dataset folders
-- JSON dataset files
-
-This keeps the GitHub repo focused on the project code and documentation.
-
-## Project Renaming
-
-The project was renamed from a practice-style name to PokemonTcgSqlImporter.
-
-This makes the project look more formal and descriptive for GitHub and interviews.
+## Notes 7/1/2026
 
 ## RecId Learning
 
@@ -224,34 +193,11 @@ A possible SQL definition:
 RecId INT IDENTITY(1,1) PRIMARY KEY,
 CardId NVARCHAR(50) NOT NULL UNIQUE
 ```
+IDENTITY(1,1) means SQL Server will automatically create a new RecId for each inserted row, starting at 1 and incrementing by 1.
+NOT NULL UNIQUE means CardId must have a value and cannot be duplicated.
 
 Important idea:
 - RecId is created by SQL Server automatically
 - CardId comes from the JSON dataset
 - RecId is useful for joins and internal database relationships
 - CardId should still be unique so duplicate cards are not inserted
-
-## Future Improvements
-
-Next improvements to learn:
-- Rebuild Cards table with RecId as the primary key
-- Rename Id column to CardId
-- Add a unique constraint/index on CardId
-- Add DateAdded with a default current date
-- Create separate tables for list data such as types and subtypes
-- Learn joins using Cards and CardTypes
-- Add indexes on columns commonly searched or grouped by
-- Possibly add a DateUpdated column and trigger later
-
-## Interview Talking Points
-
-Things I can explain from this project:
-- How I read multiple JSON files using C#
-- How I converted JSON data into C# objects
-- Why JSON arrays use List<string>
-- How I connected C# to SQL Server
-- Why parameterized SQL is better than manually building query strings
-- How I handled null values with DBNull.Value
-- How I verified inserted data with SQL queries
-- Why RecId can be better than using an external dataset id as the primary key
-- Why dataset files should not be uploaded directly to my own GitHub repo

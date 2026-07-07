@@ -26,7 +26,7 @@ foreach (string jsonFile in jsonFiles)
 Console.WriteLine("Total card count: " + allCardList.Count);
 
 for (int i = 0; i < 5; i++)
-{
+{     
     PokemonCardData card = allCardList[i];
     Console.WriteLine(card.name);
 }
