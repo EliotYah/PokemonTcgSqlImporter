@@ -64,6 +64,16 @@ The class includes fields such as:
 - types
 - subtypes
 
+### Moving Classes Into Separate Files
+
+I moved the PokemonCardData class out of Program.cs and into its own file called PokemonCardData.cs.
+
+Important idea:
+- Program.cs should focus on the main program flow
+- PokemonCardData.cs should focus on the card data structure
+- Separating classes into their own files makes the project easier to read and maintain
+- This is closer to how real C# projects are usually organized
+
 ### Lists
 
 I learned that JSON arrays should be represented as lists in C#.
@@ -201,3 +211,4 @@ Important idea:
 - CardId comes from the JSON dataset
 - RecId is useful for joins and internal database relationships
 - CardId should still be unique so duplicate cards are not inserted
+
