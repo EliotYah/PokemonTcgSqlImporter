@@ -1,5 +1,4 @@
-﻿using System.Net.Security;
-using System.Text.Json;
+﻿using System.Text.Json;
 using Microsoft.Data.SqlClient;
 
 string connectionString = @"Server=.\SQLEXPRESS;Database=PokemonTCG;Trusted_Connection=True;TrustServerCertificate=True;";
@@ -83,25 +82,5 @@ using (SqlConnection connection = new SqlConnection(connectionString))
     }
 
     Console.WriteLine("Inserted All cards into the database. ");
-}
-
-
-
-
-public class PokemonCardData
-{
-    public string id { get; set; }
-    public string name { get; set; }
-    public string hp { get; set; }
-    public string number { get; set; }
-    public string artist { get; set; }
-    public string supertype { get; set; }
-    public string level { get; set; }
-
-    public string rarity { get; set; }
-    public List<string> types { get; set; }
-
-    public List<string> subtypes { get; set; }
-    public string evolvesFrom { get; set; }
 }
 
