@@ -5,7 +5,7 @@ GROUP BY Rarity
 ORDER BY CardCount DESC;
 
 -- check the missing null rarity --
-SELECT Id, Name, Rarity
+SELECT CardId, Name, Rarity
 FROM dbo.Cards
 WHERE Rarity IS NULL;
 -- seems to be that cards where their rarity is null are usually promos and energy cards --

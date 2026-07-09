@@ -212,3 +212,82 @@ Important idea:
 - RecId is useful for joins and internal database relationships
 - CardId should still be unique so duplicate cards are not inserted
 
+
+## Notes 7/8/2026
+
+### Improved Cards Table Schema
+
+I rebuilt the dbo.Cards table to use a more professional database design.
+
+Changes made:
+- Added RecId as the internal database primary key
+- Made CardId unique so duplicate Pokemon cards cannot be inserted
+- Added DateAdded so SQL Server records when each row was imported
+- Changed some SQL data types to better match the meaning of the data
+
+Current table design ideas:
+- RecId is an INT IDENTITY column created by SQL Server
+- CardId is a VARCHAR value from the Pokemon dataset, such as base1-1
+- Name uses NVARCHAR because card names may contain special characters
+- Hp uses INT because HP is a number and should sort like a number
+- Level uses INT because level is also numeric when available
+- Number uses VARCHAR because card numbers may contain letters or special formats
+- Artist and EvolvesFrom use NVARCHAR because names may contain special characters
+- DateAdded uses DATETIME2 with SYSUTCDATETIME() so SQL Server fills it automatically
+
+Important idea:
+The JSON source can store a value as a string, but the SQL database should store the value based on how I want to query and use it.
+
+Example:
+- JSON hp is a string like "80"
+- C# reads hp as a string
+- SQL stores Hp as INT so I can sort and compare HP correctly
+
+### Updated C# Import Logic
+
+I updated the C# INSERT statement to match the new schema.
+
+Changes made:
+- Do not insert RecId because SQL Server creates it automatically
+- Do not insert DateAdded because SQL Server fills it automatically
+- Use TextToDbValue for text columns
+- Use NumberToDbValue for numeric columns like Hp and Level
+
+TextToDbValue handles text fields:
+- Empty or null strings become SQL NULL using DBNull.Value
+- Normal text values are inserted as text
+
+NumberToDbValue handles numeric fields:
+- Empty or null strings become SQL NULL using DBNull.Value
+- Valid number strings are converted into int values
+- Invalid number strings become SQL NULL for now
+
+Important idea:
+The importer acts as a translator between the JSON format and the SQL table design.
+
+### Index Notes
+
+An index helps SQL Server find, filter, sort, or group rows faster. Indexes should not be added randomly. Each index should have a reason based on how the data is queried.
+
+Possible indexes for this project:
+
+CardId:
+- CardId should be unique because it comes from the Pokemon dataset
+- It prevents duplicate cards from being inserted
+- It is useful for looking up one exact card
+- SQL Server already creates a unique index because CardId has a UNIQUE constraint
+
+Name:
+- Name may be useful if users search for cards by name
+- Example query: find cards where the name contains Charizard
+
+Rarity:
+- Rarity is useful because queries group and count cards by rarity
+- Example query: count how many cards exist for each rarity
+
+Supertype:
+- Supertype is useful because queries group cards into Pokemon, Trainer, and Energy
+- Example query: count cards by supertype
+
+Important idea:
+Indexes can make reads faster, but they can make inserts and updates slightly slower because SQL Server has to maintain the indexes. I should index columns that are commonly searched, filtered, grouped, joined, or required to be unique.

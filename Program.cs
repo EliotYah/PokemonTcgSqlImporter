@@ -25,7 +25,7 @@ foreach (string jsonFile in jsonFiles)
 Console.WriteLine("Total card count: " + allCardList.Count);
 
 for (int i = 0; i < 5; i++)
-{     
+{
     PokemonCardData card = allCardList[i];
     Console.WriteLine(card.name);
 }
@@ -42,7 +42,7 @@ for (int i = 0; i < 5; i++)
 //    }
 //}
 
-object nullChecker(string value)
+object TextToDbValue(string value)
 {
     if (string.IsNullOrEmpty(value) == true)
     {
@@ -54,29 +54,46 @@ object nullChecker(string value)
     }
 }
 
+object NumberToDbValue(string value)
+{
+    if (string.IsNullOrEmpty(value) == true)
+    {
+        return DBNull.Value;
+    }
+    else
+    {
+        if (int.TryParse(value, out int result))
+        {
+            return result;
+        }
+        else
+        {
+            return DBNull.Value;
+        }
+    }
 
-
+}
 
 using (SqlConnection connection = new SqlConnection(connectionString))
 {
     connection.Open();
     Console.WriteLine("Connected to database.");
 
-    string insertQuery = "INSERT INTO dbo.Cards (Id, Name, Hp, Number, Artist, Supertype, Rarity, Level, EvolvesFrom) VALUES (@Id, @Name, @Hp, @Number, @Artist, @Supertype, @Rarity, @Level, @EvolvesFrom)";
+    string insertQuery = "INSERT INTO dbo.Cards (CardId, Name, Hp, Number, Artist, Supertype, Rarity, Level, EvolvesFrom) VALUES (@CardId, @Name, @Hp, @Number, @Artist, @Supertype, @Rarity, @Level, @EvolvesFrom)";
 
     for (int i = 0; i < allCardList.Count; i++)
     {
         SqlCommand command = new SqlCommand(insertQuery, connection);
         PokemonCardData card = allCardList[i];
-        command.Parameters.AddWithValue("@Id", card.id);
+        command.Parameters.AddWithValue("@CardId", card.id);
         command.Parameters.AddWithValue("@Name", card.name);
-        command.Parameters.AddWithValue("@Hp", nullChecker(card.hp));
-        command.Parameters.AddWithValue("@Number", nullChecker(card.number));
-        command.Parameters.AddWithValue("@Artist", nullChecker(card.artist));
-        command.Parameters.AddWithValue("@Supertype", nullChecker(card.supertype));
-        command.Parameters.AddWithValue("@Rarity", nullChecker(card.rarity));
-        command.Parameters.AddWithValue("@Level", nullChecker(card.level));
-        command.Parameters.AddWithValue("@EvolvesFrom", nullChecker(card.evolvesFrom));
+        command.Parameters.AddWithValue("@Hp", NumberToDbValue(card.hp));
+        command.Parameters.AddWithValue("@Number", TextToDbValue(card.number));
+        command.Parameters.AddWithValue("@Artist", TextToDbValue(card.artist));
+        command.Parameters.AddWithValue("@Supertype", TextToDbValue(card.supertype));
+        command.Parameters.AddWithValue("@Rarity", TextToDbValue(card.rarity));
+        command.Parameters.AddWithValue("@Level", NumberToDbValue(card.level));
+        command.Parameters.AddWithValue("@EvolvesFrom", TextToDbValue(card.evolvesFrom));
 
         command.ExecuteNonQuery();
     }
