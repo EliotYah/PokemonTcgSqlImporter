@@ -23,25 +23,6 @@ foreach (string jsonFile in jsonFiles)
     }
 }
 Console.WriteLine("Total card count: " + allCardList.Count);
-
-for (int i = 0; i < 5; i++)
-{
-    PokemonCardData card = allCardList[i];
-    Console.WriteLine(card.name);
-}
-//string getfirstitem(List<string> list, string fallbacktext)
-//{
-//    if (list != null && list.Count > 0)
-//    {
-//        return list[0];
-
-//    }
-//    else
-//    {
-//        return fallbacktext;
-//    }
-//}
-
 object TextToDbValue(string value)
 {
     if (string.IsNullOrEmpty(value) == true)
