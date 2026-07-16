@@ -60,7 +60,7 @@ using (SqlConnection connection = new SqlConnection(connectionString))
     connection.Open();
     Console.WriteLine("Connected to database.");
 
-    string insertQuery = "INSERT INTO dbo.Cards (CardId, Name, Hp, Number, Artist, Supertype, Rarity, Level, EvolvesFrom) VALUES (@CardId, @Name, @Hp, @Number, @Artist, @Supertype, @Rarity, @Level, @EvolvesFrom)";
+    string insertQuery = "INSERT INTO dbo.Cards (CardId, Name, Hp, Number, Artist, Supertype, Rarity, Level, EvolvesFrom) OUTPUT INSERTED.RecId VALUES (@CardId, @Name, @Hp, @Number, @Artist, @Supertype, @Rarity, @Level, @EvolvesFrom)";
 
     for (int i = 0; i < allCardList.Count; i++)
     {
@@ -76,7 +76,22 @@ using (SqlConnection connection = new SqlConnection(connectionString))
         command.Parameters.AddWithValue("@Level", NumberToDbValue(card.level));
         command.Parameters.AddWithValue("@EvolvesFrom", TextToDbValue(card.evolvesFrom));
 
-        command.ExecuteNonQuery();
+        object newRecId = command.ExecuteScalar();
+        int cardRecId = Convert.ToInt32(newRecId);
+        Console.WriteLine(card.name + " inserted with RecId: " + cardRecId);
+
+        if (card.types != null && card.types.Count > 0)
+        {
+        string insertTypeQuery = "INSERT INTO dbo.CardTypes (CardRecId, TypeName) VALUES (@CardRecId, @TypeName)"; 
+
+        foreach(string type in card.types)
+            {
+                SqlCommand typeCommand = new SqlCommand(insertTypeQuery, connection);
+                typeCommand.Parameters.AddWithValue("@CardRecId", cardRecId);
+                typeCommand.Parameters.AddWithValue("@TypeName", type);
+                typeCommand.ExecuteNonQuery();
+            }
+        }
     }
 
     Console.WriteLine("Inserted All cards into the database. ");
